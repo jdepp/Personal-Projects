@@ -41,7 +41,7 @@ public class UniqueChars
 
         String test5 = "";              // returns false
         for(int i = 0; i < 256; i++)    // all unique ascii chars + 'd'
-            test5 += (char)i;           // 'd' is repeated twice - not all unique
+            test5 += (char)i;           // 'd' is repeated twice -- not all unique
         test5 += 'd';
 
         System.out.println("TESTING PREMADE STRINGS");
