@@ -4,7 +4,7 @@
  *		rotating, and reversing
  */
 
-public class LinkedListPlus<T> extends A2LList<T>
+public class LinkedListPlus<T> extends MyLinkedList<T>
 {
 	// Default constructor simply calls super()
 	public LinkedListPlus()
@@ -12,10 +12,6 @@ public class LinkedListPlus<T> extends A2LList<T>
 		super();
 	}
 
-	// Copy constructor.  This is a "deepish" copy so it will make new
-	// Node objects for all of the nodes in the old list.  However, it
-	// is not totally deep since it does NOT make copies of the objects
-	// within the Nodes -- rather it just copies the references.
 	public LinkedListPlus(LinkedListPlus<T> oldList)
 	{
 		super();
@@ -29,8 +25,7 @@ public class LinkedListPlus<T> extends A2LList<T>
 
 			// Now we traverse the old list, appending a new Node with
 			// the correct data to the end of the new list for each Node
-			// in the old list.  Note how the loop is done and how the
-			// Nodes are linked.
+			// in the old list.
 			Node currNode = firstNode;
 			temp = temp.next;
 			while (temp != null)
@@ -45,7 +40,6 @@ public class LinkedListPlus<T> extends A2LList<T>
 
 	// Make a StringBuilder then traverse the nodes of the list, appending the
 	// toString() of the data for each node to the end of the StringBuilder.
-	// Finally, return the StringBuilder as a String.
 	public String toString()
 	{
 		StringBuilder b = new StringBuilder();

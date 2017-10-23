@@ -4,12 +4,12 @@
  */
 
 
-public class A2LList<T>
+public class MyLinkedList<T>
 {
 	protected Node firstNode; // reference to first node
 	protected int  numberOfEntries;
 
-	public A2LList()
+	public MyLinkedList()
 	{
 		clear();
 	} // end default constructor
