@@ -1,5 +1,5 @@
 /*
- *	SUMMARY:
+ * SUMMARY:
  *		Class that has test cases for the LinkedListPlus class.
  *		Contains a MAIN method.
  */

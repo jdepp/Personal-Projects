@@ -1,5 +1,5 @@
 /*
- *	SUMMARY:
+ * SUMMARY:
  *		Class that munipulates a linked list using methods such as: shifting,
  *		rotating, and reversing
  */

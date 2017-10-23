@@ -1,5 +1,5 @@
 /*
- *	SUMMARY:
+ * SUMMARY:
  *		Class that performs arithmetic on a linked list of integers that
  *		represent a number.
  */

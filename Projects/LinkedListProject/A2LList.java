@@ -1,6 +1,6 @@
 /*
- *	SUMMARY:
- *		Class that implements the basic structure and methods needed for a linked list 
+ * SUMMARY:
+ *		Class that implements the basic structure and methods needed for a linked list
  */
 
 
