@@ -1,21 +1,8 @@
-//***********************************************
-// NAME: Jeremy Deppen
-// CLASS: CS 445  9:30am lecture; 3pm Tues lab
-// ASSIGNMENT: number 2
-// DUE DATE: 2/14/2017
-// THIS FILE: LinkedListPlus.java
-//***********************************************
-
-
-
-
-// CS 0445 Spring 2017 
-// LinkedListPlus<T> class partial implementation
-
-// See the commented methods below.  You must complete this class by
-// filling in the method bodies for the remaining methods.  Note that you
-// may NOT add any new instance variables, but you may use method variables
-// as needed.
+/*
+ *	SUMMARY:
+ *		Class that munipulates a linked list using methods such as: shifting,
+ *		rotating, and reversing
+ */
 
 public class LinkedListPlus<T> extends A2LList<T>
 {
@@ -24,7 +11,7 @@ public class LinkedListPlus<T> extends A2LList<T>
 	{
 		super();
 	}
-	
+
 	// Copy constructor.  This is a "deepish" copy so it will make new
 	// Node objects for all of the nodes in the old list.  However, it
 	// is not totally deep since it does NOT make copies of the objects
@@ -39,7 +26,7 @@ public class LinkedListPlus<T> extends A2LList<T>
 			Node temp = oldList.firstNode;		// front of old list
 			Node newNode = new Node(temp.data);	// copy the data
 			firstNode = newNode;				// set front of new list
-			
+
 			// Now we traverse the old list, appending a new Node with
 			// the correct data to the end of the new list for each Node
 			// in the old list.  Note how the loop is done and how the
@@ -53,7 +40,7 @@ public class LinkedListPlus<T> extends A2LList<T>
 				currNode = currNode.next;
 			}
 			numberOfEntries = oldList.numberOfEntries;
-		}			
+		}
 	}
 
 	// Make a StringBuilder then traverse the nodes of the list, appending the
@@ -82,7 +69,7 @@ public class LinkedListPlus<T> extends A2LList<T>
 		else if (num > 0)
 		{
 			Node temp = firstNode;		// Start at front
-			for (int i = 0; i < num-1; i++)	 // Get to node BEFORE the one that 
+			for (int i = 0; i < num-1; i++)	 // Get to node BEFORE the one that
 			{								 // should be the new firstNode
 				temp = temp.next;
 			}
@@ -105,7 +92,7 @@ public class LinkedListPlus<T> extends A2LList<T>
 		{
 			Node temp = firstNode;
 			for(int i = 0; i < numberOfEntries - num - 1; i++) //get to node two before
-			{											   //the nodes we want to 	
+			{											   //the nodes we want to
 				temp = temp.next;						   //start deleting
 			}
 			temp.next = null;		//breaks the reference leading to the nodes to be deleted
@@ -126,20 +113,20 @@ public class LinkedListPlus<T> extends A2LList<T>
 			{								//iterate num times
 				Node startNode = firstNode;
 				Node lastNode = firstNode;
-				
+
 				while(lastNode.next != null)  //gets lastNode to the last node
 					lastNode = lastNode.next;
-					
-				firstNode = firstNode.next;			
-			
+
+				firstNode = firstNode.next;
+
 				startNode.next = null;
 				lastNode.next = startNode;
 				lastNode = startNode;
-			}	
+			}
 		}
 		else if(num < 0)  //negative number: call rightRotate
 		{
-			if(num > numberOfEntries)  
+			if(num > numberOfEntries)
 				num = num % numberOfEntries;
 			rightRotate(Math.abs(num));  //simply call rightRotate() method
 										 //using the positive version of num
@@ -160,27 +147,27 @@ public class LinkedListPlus<T> extends A2LList<T>
 				Node startNode = firstNode;  //pointer starting at first node
 				Node lastNode = firstNode;  //pointer at last node
 				Node secondToLast = firstNode; //pointer at second to last node
-				
+
 				for(int j = 0; j < numberOfEntries - 2; j++) //loop until secondToLast
 					secondToLast = secondToLast.next;  		 //is one before last node
-					
-				lastNode = secondToLast;	   
+
+				lastNode = secondToLast;
 				lastNode = secondToLast.next;  //get last node
-				
+
 				firstNode = lastNode;     //assign the firstNode to lastNode
 				secondToLast.next = null;  //secondToLast becomes the last node
 				lastNode.next = startNode;  //assign lastNode to point to startNode
 				lastNode = startNode;
-			}	
+			}
 		}
 		else if(num < 0)  //if negative num: call leftRotate
 		{
-			if(num > numberOfEntries) 
+			if(num > numberOfEntries)
 				num = num % numberOfEntries;
 			leftRotate(Math.abs(num));	//cast num to positive
 		}
 	}
-	
+
 	// Reverse the nodes in the list.  Note that this method should not create
 	// any new Node objects -- it is simply moving them.
 	public void reverse()
@@ -195,5 +182,5 @@ public class LinkedListPlus<T> extends A2LList<T>
 			curr = next;  //increments curr
 		}
 		firstNode = prev;	//assign firstNode to the last node
-	}				
+	}
 }
