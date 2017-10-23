@@ -3,7 +3,6 @@ The file has to be in a specific format (like Huff.txt in this directory) in tha
 L or I that denotes if the node is a leaf or an interior node, and a character (or lack of) that is the value of the node.
 Once the tree is built, the user can choose to encode or decode a Huffman string. For example, take a look at the tree below.
 
------
             |------|
             |      |
             |------|
@@ -17,7 +16,7 @@ Once the tree is built, the user can choose to encode or decode a Huffman string
                |-------|    |--------|
                |   B   |    |   C    |
                |-------|    |--------|
-  -----
+ 
                
 We can now represent each character by a small bitstring. For example:
   - A: 0
