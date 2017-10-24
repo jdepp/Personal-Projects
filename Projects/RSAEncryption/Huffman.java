@@ -11,7 +11,6 @@
 
 import java.io.*;
 import java.util.*;
-import java.util.Map.Entry;
 
  public class Huffman
  {
@@ -19,7 +18,7 @@ import java.util.Map.Entry;
      Node rootNode;
      ArrayList<Triple> charFreqs = new ArrayList<Triple>();
      Node biggestNode = new Node('\u0000', 0);
-     HashMap<Character,String> dictionary = new HashMap<Character,String>();
+     HashMap<String,Character> dictionary = new HashMap<String,Character>();
      String binaryString = "";
 
      /* Constructor */
@@ -30,6 +29,7 @@ import java.util.Map.Entry;
          sortWeights();
          buildTree();
          generateDictionary(rootNode);
+         System.out.println(dictionary);
      }
 
      /* Traverses the tree recursively from left to right and builds
@@ -41,7 +41,7 @@ import java.util.Map.Entry;
      {
          if(currNode.leftChild == null & currNode.rightChild == null)
          {
-             dictionary.put(currNode.value, binaryString);
+             dictionary.put(binaryString, currNode.value);
              return;
          }
          else
