@@ -17,96 +17,118 @@ import java.util.Map.Entry;
  {
      String fileName;
      Node rootNode;
-     HashMap<Character,Integer> charFreqs = new HashMap<Character,Integer>();
-     ArrayList<Pair> sortedCharFreqs = new ArrayList<Pair>();
+     ArrayList<Triple> charFreqs = new ArrayList<Triple>();
+     Node biggestNode = new Node('\u0000', 0);
+     HashMap<Character,String> dictionary = new HashMap<Character,String>();
+     String binaryString = "";
 
      /* Constructor */
      public Huffman(String fName)
      {
          fileName = fName;
          generateWeights();
-         System.out.println(charFreqs);
          sortWeights();
-
-
          buildTree();
-         //printTree(rootNode);
+         generateDictionary(rootNode);
      }
 
-     public void printTree(Node currNode)
+     /* Traverses the tree recursively from left to right and builds
+        a binary string depending on which child it takes (visit left child
+        adds a 0, visit right child adds a 1). Once a leaf node is hit,
+        add the character and binary string to a hashmap called
+        dictionary and then backtrack to visit other nodes getting their binary strings */
+     public void generateDictionary(Node currNode)
      {
          if(currNode.leftChild == null & currNode.rightChild == null)
          {
-             System.out.println(currNode.value + " " + currNode.weight);
+             dictionary.put(currNode.value, binaryString);
              return;
          }
          else
          {
-             printTree(currNode.rightChild);
-             printTree(currNode.leftChild);
+             binaryString += "0";
+             generateDictionary(currNode.leftChild);
+             binaryString = binaryString.substring(0, binaryString.length()-1);
+             binaryString += "1";
+             generateDictionary(currNode.rightChild);
+             binaryString = binaryString.substring(0, binaryString.length()-1);
          }
      }
 
+     /* Builds the tree utilizing an ArrayList of custom type Triple which holds
+        a character, an int to represent how many times we saw this character,
+        and this characters node in the binary tree. This ArrayList is sorted
+        at every recursive call so that the smallest weighted items at indexes 1
+        and 2 for easy access to add a parent node of their combined size  */
      public void buildTree()
      {
-         for(Pair pair : sortedCharFreqs)
-            System.out.print(pair.letter + " " + pair.count + "  ");
-         System.out.println("done");
-         if(sortedCharFreqs.size() == 2)
+         // base case - two items left to connect - assign this node as root node
+         if(charFreqs.size() == 2)
          {
-             Node newRightNode = new Node(sortedCharFreqs.get(0).letter, sortedCharFreqs.get(0).count);
-             Node newLeftNode = new Node(sortedCharFreqs.get(1).letter, sortedCharFreqs.get(1).count);
-             Node newParentNode = new Node('\u0000', newLeftNode.weight+newRightNode.weight, newLeftNode, newRightNode);
-            //  System.out.println(newParentNode.weight);
-            //  System.out.println(rootNode.weight);
+             Triple leftChild = charFreqs.get(0);
+             Triple rightChild = charFreqs.get(1);
+             Node newParentNode = new Node('\u0000', leftChild.count+rightChild.count, leftChild.node, rightChild.node);
              rootNode = newParentNode;
              return;
          }
          else
          {
-             Node newRightNode = new Node('\u0000', sortedCharFreqs.get(0).count);
-             Node newLeftNode = new Node('\u0000', sortedCharFreqs.get(1).count);
-             if(sortedCharFreqs.get(0).letter != '\u0000' && sortedCharFreqs.get(0).letter != '\u0000')
-             {
-                newRightNode.value = sortedCharFreqs.get(0).letter;
-                newLeftNode.value = sortedCharFreqs.get(1).letter;
-             }
-             Node newParentNode = new Node('\u0000', newLeftNode.weight+newRightNode.weight, newLeftNode, newRightNode);
-             System.out.println(newRightNode.value + " " + newRightNode.weight + " " + newLeftNode.value + " " + newRightNode.weight);
-             //System.out.println(newParentNode.value + " " + newParentNode.weight);
-             charFreqs.remove(newLeftNode.value);
-             charFreqs.remove(newRightNode.value);
-             charFreqs.put('\u0000', newLeftNode.weight+newRightNode.weight);
-             sortedCharFreqs.clear();
+             Triple leftChild = charFreqs.get(0);
+             Triple rightChild = charFreqs.get(1);
+             Node newParentNode = new Node('\u0000', leftChild.count+rightChild.count, leftChild.node, rightChild.node);
+             Triple newTriple = new Triple('\u0000', newParentNode.weight, newParentNode);
+             charFreqs.add(newTriple);
+             charFreqs.remove(0);
+             charFreqs.remove(0);
+
              sortWeights();
              buildTree();
          }
      }
 
      /* Scans through the file and marks how many times a char
-        is seen in the file. Uses a HashMap that stores a char
-        as the key, and an int as the value that represents how many
-        times the char has been seen (frequency) */
+        is seen in the file by incrementing the int at the current
+        characters index in the ascii array. Then iterate through
+        that array and make a new ArrayList entry with the character,
+        how many times it's seen in the file, and a new Node for it */
      private void generateWeights()
      {
          FileInputStream inputStream = null;
          Scanner fileScan = null;
+         int[] asciiArray = new int[256];
          try
          {
              inputStream = new FileInputStream(fileName);
              fileScan = new Scanner(inputStream, "UTF-8");
+
+             // loop through file marking how many times a char is seen
              while(fileScan.hasNextLine())
              {
                  String currentLine = fileScan.nextLine();
                  for(int i = 0; i < currentLine.length(); i++)
                  {
                     char currentChar = currentLine.charAt(i);
-                    if(charFreqs.containsKey(currentChar))
-                        charFreqs.put(currentChar, charFreqs.get(currentChar)+1);
+                    if(asciiArray[currentChar] == 0)
+                        asciiArray[currentChar] = 1;
                     else
-                        charFreqs.put(currentChar, 1);
+                    {
+                        int currentCharFreq = asciiArray[currentChar];
+                        asciiArray[currentChar] = currentCharFreq+1;
+                    }
                  }
              }
+
+             // create new Triple object and add it to the ArrayList for each char
+             for(int i = 0; i < asciiArray.length; i++)
+             {
+                 // if val at i <= 0, this char hasn't been seen in the file
+                 if(asciiArray[i] > 0)
+                 {
+                     Triple newTriple = new Triple((char)i, asciiArray[i], new Node((char)i, asciiArray[i]));
+                     charFreqs.add(newTriple);
+                 }
+             }
+
              if(fileScan.ioException() != null)
                 throw fileScan.ioException();
          }
@@ -122,36 +144,19 @@ import java.util.Map.Entry;
          }
      }
 
-    /* Sorts the hashmap and uses an ArrayList of object Pair that
-       stores a letter and its frequency (an int). It is sorted from
-       decreasing order with the char with the biggest frequency at
-       the beginning of the ArrayList */
+    /* Sorts the ArrayList by how many times a char has been seen (count).
+       sorts in ascending order */
     public void sortWeights()
     {
-        sortedCharFreqs.clear();
-        Set<Entry<Character, Integer>> set = charFreqs.entrySet();
-        List<Entry<Character, Integer>> list = new ArrayList<Entry<Character, Integer>>(set);
-        Collections.sort( list, new Comparator<Map.Entry<Character, Integer>>()
-        {
-            public int compare( Map.Entry<Character, Integer> o1, Map.Entry<Character, Integer> o2 )
-            {
-                int val = o2.getValue().compareTo( o1.getValue());
-                if(val > 0) return -1;
-                else if(val < 0) return 1;
-                return 0;
+        Collections.sort(charFreqs, new Comparator<Triple>() {
+            @Override public int compare(Triple p1, Triple p2) {
+                return p1.count - p2.count;
             }
         });
-
-        // Store the sorted char/int items into a Pair object and add to ArrayList
-        for(Map.Entry<Character, Integer> entry:list)
-        {
-            Pair pair = new Pair(entry.getKey(), entry.getValue());
-            sortedCharFreqs.add(pair);
-        }
     }
 
 
-     /* Inner class that gives Huffman.java access to Nodes */
+     /* Inner class that gives access to Nodes */
      public class Node
      {
          public char value;
@@ -174,6 +179,23 @@ import java.util.Map.Entry;
          }
      }
 
+     /* Class that stores a character, how many times it's seen in
+        the file, and the node associated with it in the binary tree */
+     public class Triple
+     {
+         char letter;
+         int count;
+         Node node;
+
+         public Triple(char l, int c, Node n)
+         {
+             letter = l;
+             count = c;
+             node = n;
+         }
+     }
+
+     /* MAIN class used for testing purposes */
      public static void main(String[] args)
      {
          Scanner inScan = new Scanner(System.in);
